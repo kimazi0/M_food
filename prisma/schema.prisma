@@ -1,13 +1,63 @@
-// This is your Prisma schema file,
-// learn more about it in the docs: https://pris.ly/d/prisma-schema
-
-// Get a free hosted Postgres database in seconds: `npx create-db`
-
 generator client {
-  provider = "prisma-client"
-  output   = "../src/generated/prisma"
+  provider = "prisma-client-js"
 }
 
 datasource db {
   provider = "sqlite"
+}
+
+model User {
+  id        String   @id @default(cuid())
+  email     String   @unique
+  password  String
+  role      String   @default("STAFF") // ADMIN, STAFF
+  createdAt DateTime @default(now())
+}
+
+model MenuItem {
+  id          String   @id @default(cuid())
+  name        String
+  description String
+  price       Float
+  category    String   // MAIN, DRINK, DESSERT, SIDE
+  image       String
+  available   Boolean  @default(true)
+  modifications Modification[]
+  orderItems  OrderItem[]
+  createdAt   DateTime @default(now())
+  updatedAt   DateTime @updatedAt
+}
+
+model Modification {
+  id       String   @id @default(cuid())
+  name     String
+  price    Float    @default(0)
+  menuItem MenuItem @relation(fields: [menuItemId], references: [id])
+  menuItemId String
+}
+
+model Order {
+  id          String      @id @default(cuid())
+  orderNumber String      @unique
+  tableNumber Int?
+  orderType   String      // DINE_IN, TAKEAWAY
+  status      String      @default("PENDING") // PENDING, PREPARING, READY, COMPLETED, CANCELLED
+  customerName String?
+  customerPhone String?
+  pickupTime  DateTime?
+  items       OrderItem[]
+  total       Float
+  createdAt   DateTime    @default(now())
+  updatedAt   DateTime    @updatedAt
+}
+
+model OrderItem {
+  id         String   @id @default(cuid())
+  order      Order    @relation(fields: [orderId], references: [id])
+  orderId    String
+  menuItem   MenuItem @relation(fields: [menuItemId], references: [id])
+  menuItemId String
+  quantity   Int
+  modifications String // Stored as JSON string to support SQLite
+  specialInstructions String?
 }
