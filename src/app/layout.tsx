@@ -1,5 +1,5 @@
 import type { Metadata } from "next";
-import { Inter, Oswald } from "next/font/google";
+import { Inter, Oswald, Irish_Grover, Italianno } from "next/font/google";
 import "./globals.css";
 
 const inter = Inter({
@@ -12,10 +12,24 @@ const oswald = Oswald({
   subsets: ["latin"],
 });
 
+const irish = Irish_Grover({
+  weight: "400",
+  variable: "--font-irish",
+  subsets: ["latin"],
+});
+
+const italiano = Italianno({
+  weight: "400",
+  variable: "--font-italiano",
+  subsets: ["latin"],
+});
+
 export const metadata: Metadata = {
   title: "Mfood - Restaurant Ordering",
   description: "Modern progressive restaurant ordering platform",
 };
+
+import { ContactModal } from "@/components/ui/ContactModal";
 
 export default function RootLayout({
   children,
@@ -24,8 +38,9 @@ export default function RootLayout({
 }>) {
   return (
     <html lang="en" className="dark">
-      <body className={`${inter.variable} ${oswald.variable} font-sans antialiased text-white bg-[#0a0a0a]`}>
+      <body className={`${inter.variable} ${oswald.variable} ${irish.variable} ${italiano.variable} font-sans antialiased text-white bg-background selection:bg-primary/30`}>
         {children}
+        <ContactModal />
       </body>
     </html>
   );

@@ -6,10 +6,10 @@ import { useState } from "react";
 import { MenuItemModal } from "./MenuItemModal";
 
 const CATEGORY_ACCENT: Record<string, string> = {
-  MAIN: "#FF6B35",
-  DRINK: "#4ECDC4",
-  DESSERT: "#F7D794",
-  SIDE: "#95E1D3",
+  MAIN: "#FACC15",
+  DRINK: "#FDE047",
+  DESSERT: "#EAB308",
+  SIDE: "#CA8A04",
 };
 
 interface MenuItem {
@@ -17,23 +17,23 @@ interface MenuItem {
   name: string;
   description: string;
   price: number;
-  category: string;
+  categoryName: string | null;
   image: string;
   modifications: any[];
 }
 
 export function MenuItemCard({ item }: { item: MenuItem }) {
   const [modalOpen, setModalOpen] = useState(false);
-  const accent = CATEGORY_ACCENT[item.category] ?? "#FF6B35";
+  const accent = CATEGORY_ACCENT[item.categoryName || ""] ?? "#FACC15";
 
   return (
     <>
       <div
-        className="group relative flex flex-col overflow-hidden rounded-[16px] bg-[#1a1a1a] border border-[#2a2a2a] hover:border-primary cursor-pointer transition-all duration-300 hover:-translate-y-2 hover:shadow-[0_10px_40px_-10px_rgba(196,30,58,0.3)]"
+        className="group relative flex flex-col overflow-hidden rounded-[32px] bg-card/60 backdrop-blur-md border border-white/5 hover:border-primary/50 cursor-pointer transition-all duration-500 hover:-translate-y-2 hover:shadow-[0_20px_80px_-20px_rgba(0,0,0,0.8)]"
         onClick={() => setModalOpen(true)}
       >
         {/* Image */}
-        <div className="relative h-56 overflow-hidden">
+        <div className="relative h-64 overflow-hidden">
           <Image
             src={
               item.image ||
@@ -41,36 +41,35 @@ export function MenuItemCard({ item }: { item: MenuItem }) {
             }
             alt={item.name}
             fill
-            className="object-cover group-hover:scale-105 transition-transform duration-700"
+            className="object-cover group-hover:scale-110 group-hover:rotate-1 transition-transform duration-1000 ease-out"
           />
-          <div className="absolute inset-0 bg-gradient-to-t from-[#1a1a1a] via-transparent to-transparent opacity-80" />
+          <div className="absolute inset-0 bg-gradient-to-t from-zinc-950 via-zinc-950/20 to-transparent opacity-80" />
           {/* Category badge */}
           <div
-            className="absolute top-4 left-4 px-3 py-1 rounded-full text-[10px] font-black uppercase tracking-widest text-white shadow-lg"
-            style={{ background: accent }}
+            className="absolute top-6 left-6 px-4 py-1.5 rounded-full text-[9px] font-black uppercase tracking-[0.2em] text-white shadow-2xl backdrop-blur-md border border-white/10"
+            style={{ background: accent + "66" }} // 40% opacity
           >
-            {item.category}
+            {item.categoryName}
           </div>
         </div>
 
         {/* Content */}
-        <div className="flex flex-col flex-1 p-6 relative">
-          <div className="flex justify-between items-start gap-4 mb-2">
-            <h3 className="font-heading text-xl font-bold uppercase tracking-tight leading-tight flex-1 text-white">{item.name}</h3>
+        <div className="flex flex-col flex-1 p-8 relative">
+          <div className="flex justify-between items-start gap-4 mb-3">
+            <h3 className="font-heading text-2xl font-black uppercase tracking-tighter leading-none flex-1 text-white">{item.name}</h3>
             <span
-              className="font-heading font-black text-xl shrink-0 tabular-nums text-primary"
+              className="font-heading font-black text-2xl shrink-0 tabular-nums text-primary"
             >
               ${item.price.toFixed(2)}
             </span>
           </div>
-          <p className="text-sm text-[#a1a1a1] line-clamp-2 mb-6 leading-relaxed flex-1">
+          <p className="text-sm text-zinc-500 line-clamp-2 mb-8 leading-relaxed flex-1 font-medium">
             {item.description}
           </p>
 
           {/* Add button */}
           <div
-            className="flex items-center justify-center gap-2 py-3 rounded-full text-xs font-bold uppercase tracking-widest transition-all duration-300 text-white group-hover:bg-primary border border-white/10 group-hover:border-primary/50"
-            style={{ background: "rgba(255,255,255,0.05)" }}
+            className="flex items-center justify-center gap-2 py-4 rounded-2xl text-[10px] font-black uppercase tracking-[0.2em] transition-all duration-500 text-white bg-white/5 border border-white/5 group-hover:bg-primary group-hover:text-secondary group-hover:border-primary group-hover:shadow-[0_0_30px_rgba(250,204,21,0.3)]"
           >
             <Plus className="w-4 h-4" />
             Add to Order

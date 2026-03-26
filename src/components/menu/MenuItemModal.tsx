@@ -11,10 +11,10 @@ import { Minus, Plus, ShoppingCart } from "lucide-react";
 import { useCart } from "@/store/useCart";
 
 const CATEGORY_ACCENT: Record<string, string> = {
-  MAIN: "#FF6B35",
-  DRINK: "#4ECDC4",
-  DESSERT: "#F7D794",
-  SIDE: "#95E1D3",
+  MAIN: "#FACC15",
+  DRINK: "#FDE047",
+  DESSERT: "#EAB308",
+  SIDE: "#CA8A04",
 };
 
 interface MenuItem {
@@ -22,7 +22,7 @@ interface MenuItem {
   name: string;
   description: string;
   price: number;
-  category: string;
+  categoryName: string | null;
   image: string;
   modifications: any[];
 }
@@ -35,7 +35,7 @@ export function MenuItemModal({
   const [quantity, setQuantity] = useState(1);
   const [specialInstructions, setSpecialInstructions] = useState("");
   const addItem = useCart((state) => state.addItem);
-  const accent = CATEGORY_ACCENT[item.category] ?? "#FF6B35";
+  const accent = CATEGORY_ACCENT[item.categoryName || ""] ?? "#FACC15";
 
   const handleAddToCart = () => {
     addItem({
@@ -54,66 +54,65 @@ export function MenuItemModal({
 
   return (
     <Dialog open={isOpen} onOpenChange={(open) => !open && onClose()}>
-      <DialogContent className="sm:max-w-[440px] p-0 overflow-hidden bg-[#1a1a1a] border-[#2a2a2a] rounded-[24px] shadow-2xl">
+      <DialogContent className="sm:max-w-[480px] p-0 overflow-hidden bg-background border-white/10 rounded-[40px] shadow-[0_32px_128px_-16px_rgba(0,0,0,0.8)]">
         {/* Hero image */}
-        <div className="relative h-60 w-full overflow-hidden">
+        <div className="relative h-72 w-full overflow-hidden">
           <Image
             src={item.image || "https://images.unsplash.com/photo-1546069901-ba9599a7e63c?w=800&q=80"}
             alt={item.name}
             fill
             className="object-cover"
           />
-          <div className="absolute inset-0 bg-gradient-to-t from-[#1a1a1a] via-[#1a1a1a]/40 to-transparent" />
+          <div className="absolute inset-0 bg-gradient-to-t from-zinc-950 via-zinc-950/40 to-transparent" />
           {/* Category chip */}
           <div
-            className="absolute top-4 left-4 px-3 py-1 rounded-full text-[10px] font-black uppercase tracking-widest text-white shadow-lg"
-            style={{ background: accent }}
+            className="absolute top-6 left-6 px-4 py-1.5 rounded-full text-[9px] font-black uppercase tracking-[0.2em] text-white shadow-2xl backdrop-blur-md border border-white/10"
+            style={{ background: accent + "66" }}
           >
-            {item.category}
+            {item.categoryName}
           </div>
           {/* Price overlay */}
-          <div className="absolute bottom-4 right-4 text-3xl font-heading font-black tabular-nums tracking-tighter" style={{ color: accent }}>
+          <div className="absolute bottom-6 right-6 text-4xl font-heading font-black tabular-nums tracking-tighter text-white drop-shadow-xl">
             ${item.price.toFixed(2)}
           </div>
         </div>
 
-        <div className="p-6 md:p-8 pt-2">
-          <DialogHeader className="mb-6">
-            <DialogTitle className="font-heading text-3xl font-bold uppercase tracking-tight text-white">{item.name}</DialogTitle>
-            <DialogDescription className="text-[#a1a1a1] mt-2 text-base leading-relaxed">
+        <div className="p-8 md:p-10 pt-4">
+          <DialogHeader className="mb-8">
+            <DialogTitle className="font-heading text-4xl font-black uppercase tracking-tighter text-white leading-tight">{item.name}</DialogTitle>
+            <DialogDescription className="text-zinc-500 mt-4 text-base leading-relaxed font-medium">
               {item.description}
             </DialogDescription>
           </DialogHeader>
 
-          <div className="mt-6 space-y-3">
-            <label className="text-sm font-bold uppercase tracking-widest text-[#a1a1a1]">
+          <div className="mt-8 space-y-4">
+            <label className="text-[10px] font-black uppercase tracking-[0.3em] text-zinc-600">
               Special Instructions
             </label>
             <Textarea
               placeholder="Allergies, preferences, extra spicy? Let us know."
               value={specialInstructions}
               onChange={(e) => setSpecialInstructions(e.target.value)}
-              className="resize-none bg-[#111111] border-[#2a2a2a] focus:border-primary focus:ring-1 focus:ring-primary rounded-xl text-white placeholder:text-zinc-600"
-              rows={3}
+              className="resize-none bg-white/[0.03] border-white/10 focus:border-primary focus:ring-1 focus:ring-primary rounded-2xl text-white placeholder:text-zinc-700 h-24"
             />
           </div>
 
           {/* Quantity + CTA */}
-          <div className="flex items-center justify-between gap-4 mt-8 pt-6 border-t border-[#2a2a2a]">
+          <div className="flex items-center justify-between gap-6 mt-12 pt-8 border-t border-white/5">
             {/* Qty selector */}
-            <div className="flex items-center justify-between min-w-[120px] h-14 bg-[#111111] border border-[#2a2a2a] rounded-full px-2">
+            <div className="flex items-center justify-between min-w-[140px] h-16 bg-white/[0.03] border border-white/10 rounded-2xl px-3">
               <button
                 type="button"
-                className="w-10 h-10 flex items-center justify-center rounded-full text-white hover:bg-[#2a2a2a] hover:text-primary transition-colors disabled:opacity-30 disabled:hover:bg-transparent disabled:hover:text-white"
+                className="w-10 h-10 flex items-center justify-center rounded-xl text-zinc-400 hover:bg-white/5 hover:text-white transition-all disabled:opacity-20"
                 onClick={() => setQuantity(Math.max(1, quantity - 1))}
                 disabled={quantity <= 1}
               >
                 <Minus className="h-5 w-5" />
               </button>
-              <span className="w-8 text-center font-heading font-black text-xl text-white">{quantity}</span>
+              <span className="w-8 text-center font-heading font-black text-2xl text-white">{quantity}</span>
               <button
                 type="button"
-                className="w-10 h-10 flex items-center justify-center rounded-full text-white hover:bg-[#2a2a2a] hover:text-primary transition-colors"
+                className="w-10 h-10 flex items-center justify-center rounded-xl text-zinc-400 hover:bg-white/5 hover:text-white transition-all"
                 onClick={() => setQuantity(quantity + 1)}
               >
                 <Plus className="h-5 w-5" />
@@ -121,13 +120,12 @@ export function MenuItemModal({
             </div>
 
             <button
-              type="button"
-              onClick={handleAddToCart}
-              className="flex-1 flex items-center justify-center gap-3 h-14 rounded-full font-bold text-sm uppercase tracking-widest text-white transition-all hover:brightness-110 active:scale-95 shadow-[0_4px_20px_-5px_rgba(0,0,0,0.5)]"
-              style={{ background: accent }}
+               type="button"
+               onClick={handleAddToCart}
+               className="flex-1 flex items-center justify-center gap-3 h-16 rounded-2xl font-black text-xs uppercase tracking-[0.2em] text-secondary bg-primary hover:brightness-110 active:scale-95 transition-all shadow-xl shadow-primary/20"
             >
               <ShoppingCart className="h-5 w-5" />
-              Add — ${(item.price * quantity).toFixed(2)}
+              ADD — ${(item.price * quantity).toFixed(2)}
             </button>
           </div>
         </div>
