@@ -1,8 +1,10 @@
 "use client";
 
 import { useState, useEffect } from "react";
+import { useSearchParams } from "next/navigation";
 import { MenuGallery } from "@/components/menu/MenuGallery";
 import { MotionViewport } from "@/components/ui/MotionViewport";
+import { useTable } from "@/store/useTable";
 import { UtensilsCrossed } from "lucide-react";
 import { getVisibleMenuItems } from "@/lib/actions/menu";
 
@@ -16,8 +18,21 @@ interface MenuItem {
 }
 
 export default function MenuPage() {
+  const searchParams = useSearchParams();
+  const { setTableNumber, tableNumber } = useTable();
   const [items, setItems] = useState<MenuItem[]>([]);
   const [loading, setLoading] = useState(true);
+
+  useEffect(() => {
+    // Extract table number from URL query parameter
+    const tableParam = searchParams.get("table");
+    if (tableParam) {
+      const tableNum = parseInt(tableParam, 10);
+      if (!isNaN(tableNum) && tableNum > 0) {
+        setTableNumber(tableNum);
+      }
+    }
+  }, [searchParams, setTableNumber]);
 
   useEffect(() => {
     async function fetchMenu() {
@@ -36,6 +51,15 @@ export default function MenuPage() {
   return (
     <div className="min-h-screen bg-background pt-32 pb-24">
       <div className="container mx-auto px-4">
+        {/* Table Info Banner */}
+        {tableNumber && (
+          <div className="mb-8 p-4 rounded-2xl bg-primary/10 border border-primary/30">
+            <p className="text-center text-sm font-black text-primary uppercase tracking-widest">
+              🍽️ Table {tableNumber} - Dine In
+            </p>
+          </div>
+        )}
+
         {/* Header */}
         <MotionViewport className="text-center mb-16">
           <div className="inline-flex items-center justify-center w-16 h-16 rounded-2xl bg-primary/10 border border-primary/20 mb-6">

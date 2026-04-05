@@ -91,7 +91,7 @@ export function TableQRGenerator() {
               >
                 <div className="p-4 bg-white rounded-2xl shadow-xl transition-transform group-hover:scale-105 duration-500 print:shadow-none print:p-0">
                   <QRCodeCanvas
-                    value={`${origin}/menu?table=${num}`}
+                    value={`${origin}/en/menu?table=${num}`}
                     size={140}
                     level="H"
                     includeMargin={false}

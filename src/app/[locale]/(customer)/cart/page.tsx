@@ -1,14 +1,17 @@
 "use client";
 
+import { useState } from "react";
 import { useCart } from "@/store/useCart";
 import { MotionViewport } from "@/components/ui/MotionViewport";
 import { Button } from "@/components/ui/button";
+import { CheckoutModal } from "@/components/ui/CheckoutModal";
 import { ShoppingBag, ArrowLeft, Trash2, Plus, Minus } from "lucide-react";
 import { Link } from "@/navigation";
 import Image from "next/image";
 
 export default function CartPage() {
   const { items, removeItem, updateQuantity, clearCart } = useCart();
+  const [isCheckoutOpen, setIsCheckoutOpen] = useState(false);
   const totalPrice = items.reduce((sum, item) => sum + item.price * item.quantity, 0);
 
   if (items.length === 0) {
@@ -102,7 +105,10 @@ export default function CartPage() {
                   <span className="font-heading text-3xl font-black text-primary">${totalPrice.toFixed(2)}</span>
                 </div>
               </div>
-              <Button className="w-full h-16 rounded-2xl bg-primary text-secondary font-black uppercase tracking-widest text-xs hover:brightness-110 shadow-xl shadow-primary/20">
+              <Button 
+                onClick={() => setIsCheckoutOpen(true)}
+                className="w-full h-16 rounded-2xl bg-primary text-secondary font-black uppercase tracking-widest text-xs hover:brightness-110 shadow-xl shadow-primary/20"
+              >
                 Checkout Now
               </Button>
               <Link href="/menu" className="block text-center mt-6 text-[10px] font-black text-zinc-500 hover:text-white uppercase tracking-widest transition-colors">
@@ -112,6 +118,8 @@ export default function CartPage() {
           </div>
         </div>
       </div>
+
+      <CheckoutModal isOpen={isCheckoutOpen} onClose={() => setIsCheckoutOpen(false)} />
     </div>
   );
 }
