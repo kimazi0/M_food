@@ -8,6 +8,7 @@ const nextConfig: NextConfig = {
   typescript: {
     ignoreBuildErrors: true,
   },
+  serverExternalPackages: ["better-sqlite3", "@prisma/adapter-better-sqlite3"],
   turbopack: {
     root: __dirname,
   },
