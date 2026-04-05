@@ -65,13 +65,13 @@ export async function createOrder(data: {
     });
 
     if (menuItems.length !== data.items.length) {
-      const foundIds = new Set(menuItems.map((m) => m.id));
-      const missingId = itemIds.find((id) => !foundIds.has(id));
+      const foundIds = new Set(menuItems.map((m: any) => m.id));
+      const missingId = itemIds.find((id: any) => !foundIds.has(id));
       return { success: false, error: `Menu item not found` };
     }
 
     // Validate prices haven't changed dramatically (prevent tampering)
-    const priceMap = new Map(menuItems.map((m) => [m.id, m.price]));
+    const priceMap = new Map(menuItems.map((m: any) => [m.id, m.price]));
     for (const item of data.items) {
       const currentPrice = priceMap.get(item.menuItemId);
       if (!currentPrice) {
@@ -97,7 +97,7 @@ export async function createOrder(data: {
         total: data.total,
         status: "PENDING",
         items: {
-          create: data.items.map((item) => ({
+          create: data.items.map((item: any) => ({
             menuItemId: item.menuItemId,
             quantity: item.quantity,
             modifications: JSON.stringify(item.modifications || []),
@@ -162,7 +162,7 @@ export async function getOrderByNumber(orderNumber: string) {
       total: order.total,
       status: order.status,
       createdAt: order.createdAt,
-      items: order.items.map((item) => ({
+      items: order.items.map((item: any) => ({
         id: item.id,
         menuItemId: item.menuItemId,
         name: item.menuItem.name,
